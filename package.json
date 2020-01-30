@@ -28,6 +28,7 @@
   "scripts": {
     "checkPushed": "[ \"$(git rev-list --count @{upstream}..HEAD)\" -eq 0 ] || (echo You have unpushed commits && exit 1)",
     "prepublishOnly": "npm run checkPushed && npm test && npm run build",
+    "publish": "(npm publish || echo '`npm publish` failed. Presumably the version has not changed so nothing was published.')",
     "check-formatting": "./node_modules/.bin/prettier '**/*.ts' --list-different",
     "fix-formatting": "./node_modules/.bin/prettier '**/*.ts' --write",
     "lint": "npm run tslint && npm run check-formatting",
