@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.1
+
+- Allow non-consecutive migration ids
+
 ## V4
 
 - [BREAKING] Updated whole project to TypeScript
