@@ -411,7 +411,7 @@ test("empty migrations dir", async t => {
   })
 })
 
-test("non-consecutive ordering", t => {
+test("non-consecutive ordering is allowed", async t => {
   const databaseName = "migration-test-non-consec"
   const dbConfig = {
     database: databaseName,
@@ -421,16 +421,17 @@ test("non-consecutive ordering", t => {
     port,
   }
 
-  const promise = createDb(databaseName, dbConfig).then(() => {
-    return migrate(dbConfig, "src/__tests__/fixtures/non-consecutive")
-  })
-
-  return t.throwsAsync(promise).then(err => {
-    t.regex(err.message, /Found a non-consecutive migration ID/)
-  })
+  await createDb(databaseName, dbConfig)
+    .then(() => {
+      return migrate(dbConfig, "src/__tests__/fixtures/non-consecutive")
+    })
+    .then(() => doesTableExist(dbConfig, "non_consecutive_three"))
+    .then(exists => {
+      t.truthy(exists)
+    })
 })
 
-test("not starting from one", t => {
+test("not starting from one", async t => {
   const databaseName = "migration-test-starting-id"
   const dbConfig = {
     database: databaseName,
@@ -440,13 +441,14 @@ test("not starting from one", t => {
     port,
   }
 
-  const promise = createDb(databaseName, dbConfig).then(() => {
-    return migrate(dbConfig, "src/__tests__/fixtures/start-from-2")
-  })
-
-  return t.throwsAsync(promise).then(err => {
-    t.regex(err.message, /Found a non-consecutive migration ID/)
-  })
+  await createDb(databaseName, dbConfig)
+    .then(() => {
+      return migrate(dbConfig, "src/__tests__/fixtures/start-from-2")
+    })
+    .then(() => doesTableExist(dbConfig, "start_from_two"))
+    .then(exists => {
+      t.truthy(exists)
+    })
 })
 
 test("negative ID", t => {
@@ -464,7 +466,7 @@ test("negative ID", t => {
   })
 
   return t.throwsAsync(promise).then(err => {
-    t.regex(err.message, /Found a non-consecutive migration ID/)
+    t.regex(err.message, /Found a negative migration ID/)
     t.regex(err.message, /-1_negative/, "Should name the problem file")
   })
 })
