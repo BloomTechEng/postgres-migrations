@@ -425,6 +425,9 @@ test("non-consecutive ordering is allowed", async t => {
     .then(() => {
       return migrate(dbConfig, "src/__tests__/fixtures/non-consecutive")
     })
+    .then(() => {
+      return migrate(dbConfig, "src/__tests__/fixtures/non-consecutive")
+    })
     .then(() => doesTableExist(dbConfig, "non_consecutive_three"))
     .then(exists => {
       t.truthy(exists)

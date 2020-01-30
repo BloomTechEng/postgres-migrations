@@ -165,12 +165,13 @@ This means that the scripts have changed since it was applied.`)
 /** Work out which migrations to apply */
 function filterMigrations(
   migrations: Array<Migration>,
-  appliedMigrations: Record<number, Migration | undefined>,
+  appliedMigrations: Array<Migration>,
 ) {
-  const notAppliedMigration = (migration: Migration) =>
-    !appliedMigrations[migration.id]
-
-  return migrations.filter(notAppliedMigration)
+  return migrations.filter(possibleMigration => {
+    return !appliedMigrations.some(
+      appliedMigration => appliedMigration.id === possibleMigration.id,
+    )
+  })
 }
 
 /** Logs the result */

@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.2
+
+- Fix detection of previously run migration scripts.
+
 ## 4.0.1
 
 - Allow non-consecutive migration ids
