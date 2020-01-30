@@ -1,11 +1,33 @@
-sudo: required
-
 language: node_js
-node_js:
-  - "lts/*"
-
-services:
-  - docker
-
+dist: xenial
+cache:
+  directories:
+    - "node_modules"
+addons:
+  postgresql: "11"
+  apt:
+    packages:
+      - postgresql-11
+      - postgresql-client-11
+env:
+  global:
+    # ENVKEY
+    - secure: "LihagStDT+WLY0ip20tznPPcoNbH9WVOSoThDvKFyqE5fOkmK92f8BMTmWjCHhaNQBrwO3skANh4PBn8SoL7iEsCld30jlCB3o8R4RkPt0wDMllISHNGgtnFUTA+kvTHRsssguFFeczYFHujdqu5f/NZ2D13HcXxNLoSF/9b6n/VKr0HGqOw8H3E4TCeI6mhDS73Eu7vjOcDq0QCQTEaZmXhV7PdHXEcgnVqnXaTxAQXhfF0ltwwNVYvaUlHHlXVQI0T1rmKNzXPFbNRb4yUvttVle1EblgNGA7/n5rjfqKwprec/rjyVy+28iqiCdWg5dINEMV4QT5rHSTek4s+n92Yx59IksyEDgye11w+UG1btNYa7Q08ryForcVmwJBDqMAMrqFKcp4IVjZz/ofVNUMxCGOloPp0l4DO5c2iFp0s3wsW/YYYC6lQ0TBK/lKmn2KWKpiXVJRAbAYJyw+m13IbEmGAz2uc2gvFVprztbLyPLtExEhFAc83E++Y1Jwb4K6t44HMkzveIRiY6Gy/ZkpU9gbdoQCWMcHL17RQhQePmOnnvj3lGFOEvne+yVEdaDlOUtPE9YhA4/YqVun4ChzSqu/nJlZORYIsAnii9xPHn5SD1HzNOXk9TovxIrfiG/H32WaNcfb6144kMPn6camncm2ML0RCiIkQqfsL+I0="
 before_install:
-  - docker pull postgres:9.4
+  - curl -s https://raw.githubusercontent.com/envkey/envkey-source/master/install.sh | bash
+  - eval $(envkey-source)
+  - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+install:
+  - npm install
+before_script:
+  - npm run build
+script:
+  - npm test
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: npm run publish
+    on:
+      branch: master
+notifications:
+  email: false
