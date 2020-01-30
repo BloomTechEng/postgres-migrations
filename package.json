@@ -1,10 +1,9 @@
 {
-  "name": "postgres-migrations",
+  "name": "@lambdaschool/postgres-migrations",
   "version": "4.0.0",
   "description": "Stack Overflow style database migrations for PostgreSQL",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "author": "Thom Wright",
   "keywords": [
     "postgres",
     "postgresql",
@@ -14,14 +13,14 @@
     "database",
     "db"
   ],
-  "homepage": "https://github.com/thomwright/postgres-migrations#readme",
+  "homepage": "https://github.com/LambdaSchoolEngineering/postgres-migrations#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:thomwright/postgres-migrations.git"
+    "url": "git@github.com:LambdaSchoolEngineering/postgres-migrations.git"
   },
   "bugs": {
-    "url": "https://github.com/thomwright/postgres-migrations/issues"
+    "url": "https://github.com/LambdaSchoolEngineering/postgres-migrations/issues"
   },
   "engines": {
     "node": ">10.17.0"
