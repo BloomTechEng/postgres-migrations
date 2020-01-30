@@ -139,18 +139,16 @@ function validateMigrations(
   migrations: Array<Migration>,
   appliedMigrations: Record<number, Migration | undefined>,
 ) {
-  const indexNotMatch = (migration: Migration, index: number) =>
-    migration.id !== index
   const invalidHash = (migration: Migration) => {
     const appliedMigration = appliedMigrations[migration.id]
     return appliedMigration != null && appliedMigration.hash !== migration.hash
   }
 
-  // Assert migration IDs are consecutive integers
-  const notMatchingId = migrations.find(indexNotMatch)
-  if (notMatchingId) {
+  // Assert migration IDs are positive integers
+  const negativeId = migrations.find(m => m.id < 0)
+  if (negativeId) {
     throw new Error(
-      `Found a non-consecutive migration ID on file: '${notMatchingId.fileName}'`,
+      `Found a negative migration ID on file: '${negativeId.fileName}'`,
     )
   }
 
