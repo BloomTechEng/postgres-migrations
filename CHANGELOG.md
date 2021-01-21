@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.0.3
+## 4.1.3
 
 - Add optional ssl parameter to type definition
 
