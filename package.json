@@ -1,6 +1,6 @@
 {
   "name": "@lambdaschool/postgres-migrations",
-  "version": "4.1.3",
+  "version": "4.1.4",
   "description": "Stack Overflow style database migrations for PostgreSQL",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
