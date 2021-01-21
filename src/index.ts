@@ -8,4 +8,5 @@ export {
   Logger,
   Config,
   MigrationError,
+  Migration,
 } from "./types"
