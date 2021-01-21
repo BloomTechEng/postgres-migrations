@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.3
+
+- Add optional ssl parameter to type definition
+
 ## 4.0.2
 
 - Fix detection of previously run migration scripts.
