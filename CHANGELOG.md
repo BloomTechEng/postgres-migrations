@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.4
+
+- Export Migration type
+
 ## 4.1.3
 
 - Add optional ssl parameter to type definition
