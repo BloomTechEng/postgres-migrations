@@ -3,7 +3,6 @@ import * as path from "path"
 import {promisify} from "util"
 import {loadMigrationFile} from "./migration-file"
 import {Logger, Migration} from "./types"
-import {validateMigrationOrdering} from "./validation"
 
 const readDir = promisify(fs.readdir)
 
@@ -43,7 +42,20 @@ export const loadMigrationFiles = async (
   // Arrange in ID order
   const orderedMigrations = unorderedMigrations.sort((a, b) => a.id - b.id)
 
-  validateMigrationOrdering(orderedMigrations)
+  validateIdsAreUnique(orderedMigrations)
 
   return orderedMigrations
+}
+
+function validateIdsAreUnique(migrations: Array<Migration>) {
+  migrations.reduce((map, migration) => {
+    if (Boolean(map[migration.id]))
+      throw new Error(
+        `Two migration files have the same id! ${map[migration.id].fileName} ${
+          migration.fileName
+        }`,
+      )
+    map[migration.id] = migration
+    return map
+  }, {} as {[key: number]: Migration})
 }
