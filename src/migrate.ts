@@ -146,7 +146,7 @@ function validateMigrations(
   }
 
   // Assert migration IDs are positive integers
-  const negativeId = migrations.find(m => m.id < 0)
+  const negativeId = migrations.find((m) => m.id < 0)
   if (negativeId) {
     throw new Error(
       `Found a negative migration ID on file: '${negativeId.fileName}'`,
@@ -168,9 +168,9 @@ function filterMigrations(
   migrations: Array<Migration>,
   appliedMigrations: Array<Migration>,
 ) {
-  return migrations.filter(possibleMigration => {
+  return migrations.filter((possibleMigration) => {
     return !appliedMigrations.some(
-      appliedMigration => appliedMigration.id === possibleMigration.id,
+      (appliedMigration) => appliedMigration.id === possibleMigration.id,
     )
   })
 }

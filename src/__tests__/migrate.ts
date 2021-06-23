@@ -441,7 +441,7 @@ test("empty migrations dir", async (t) => {
   })
 })
 
-test("non-consecutive ordering is allowed", async t => {
+test("non-consecutive ordering is allowed", async (t) => {
   const databaseName = "migration-test-non-consec"
   const dbConfig = {
     database: databaseName,
@@ -459,12 +459,12 @@ test("non-consecutive ordering is allowed", async t => {
       return migrate(dbConfig, "src/__tests__/fixtures/non-consecutive")
     })
     .then(() => doesTableExist(dbConfig, "non_consecutive_three"))
-    .then(exists => {
+    .then((exists) => {
       t.truthy(exists)
     })
 })
 
-test("not starting from one", async t => {
+test("not starting from one", async (t) => {
   const databaseName = "migration-test-starting-id"
   const dbConfig = {
     database: databaseName,
@@ -479,7 +479,7 @@ test("not starting from one", async t => {
       return migrate(dbConfig, "src/__tests__/fixtures/start-from-2")
     })
     .then(() => doesTableExist(dbConfig, "start_from_two"))
-    .then(exists => {
+    .then((exists) => {
       t.truthy(exists)
     })
 })
@@ -498,7 +498,7 @@ test("negative ID", (t) => {
     return migrate(dbConfig, "src/__tests__/fixtures/negative")
   })
 
-  return t.throwsAsync(promise).then(err => {
+  return t.throwsAsync(promise).then((err) => {
     t.regex(err.message, /Found a negative migration ID/)
     t.regex(err.message, /-1_negative/, "Should name the problem file")
   })
