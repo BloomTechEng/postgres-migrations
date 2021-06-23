@@ -23,7 +23,7 @@
     "url": "https://github.com/LambdaSchoolEngineering/postgres-migrations/issues"
   },
   "engines": {
-    "node": ">10.17.0"
+    "node": "14.17.1"
   },
   "scripts": {
     "prepublishOnly": "npm run build",
