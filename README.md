@@ -1,11 +1,20 @@
 # Postgres migrations
 
-[![Travis](https://img.shields.io/travis/ThomWright/postgres-migrations.svg)](https://travis-ci.org/ThomWright/postgres-migrations)
+![GitHub Actions](https://github.com/ThomWright/postgres-migrations/actions/workflows/node.js.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/postgres-migrations.svg)](https://www.npmjs.com/package/postgres-migrations)
 [![David](https://img.shields.io/david/ThomWright/postgres-migrations.svg)](https://david-dm.org/ThomWright/postgres-migrations)
 [![David](https://img.shields.io/david/dev/ThomWright/postgres-migrations.svg)](https://david-dm.org/ThomWright/postgres-migrations)
 
 A PostgreSQL migration library inspired by the Stack Overflow system described in [Nick Craver's blog](http://nickcraver.com/blog/2016/05/03/stack-overflow-how-we-do-deployment-2016-edition/#database-migrations).
+
+Migrations are defined in sequential SQL files, for example:
+
+```text
+migrations
+├ 1_create-table.sql
+├ 2_alter-table.sql
+└ 3_add-index.sql
+```
 
 Requires Node 10.17.0+
 
@@ -22,7 +31,7 @@ import {createDb, migrate} from "postgres-migrations"
 
 async function() {
   const dbConfig = {
-    database: "database-name"
+    database: "database-name",
     user: "postgres",
     password: "password",
     host: "localhost",
@@ -76,6 +85,16 @@ async function() {
 }
 ```
 
+### Validating migration files
+
+Occasionally, if two people are working on the same codebase independently, they might both create a migration at the same time. For example, `5_add-table.sql` and `5_add-column.sql`. If these both get pushed, there will be a conflict.
+
+While the migration system will notice this and refuse to apply the migrations, it can be useful to catch this as early as possible.
+
+The `loadMigrationFiles` function can be used to check if the migration files satisfy the rules.
+
+Alternatively, use the `pg-validate-migrations` bin script: `pg-validate-migrations "path/to/migration/files"`.
+
 ## Design decisions
 
 ### No down migrations
@@ -104,9 +123,9 @@ Previously run migration scripts shouldn't be modified, since we want the proces
 
 This is enforced by hashing the file contents of a migration script and storing this in `migrations` table. Before running a migration, the previously run scripts are hashed and checked against the database to ensure they haven't changed.
 
-### Each migration run in a transaction
+### Each migration runs in a transaction
 
-Ensures each migration is atomic. Either it completes successfully, or it is rolled back and the process is aborted.
+Running in a transaction ensures each migration is atomic. Either it completes successfully, or it is rolled back and the process is aborted.
 
 An exception is made when `-- postgres-migrations disable-transaction` is included at the top of the migration file. This allows migrations such as `CREATE INDEX CONCURRENTLY` which cannot be run inside a transaction.
 
@@ -125,7 +144,7 @@ B Connected to database
 B Acquiring advisory lock...
 A Connected to database
 A Acquiring advisory lock...
-B ... aquired advisory lock
+B ... acquired advisory lock
 B Starting migrations
 B Starting migration: 2 migration-name
 B Finished migration: 2 migration-name
@@ -135,7 +154,7 @@ B Successfully applied migrations: migration-name, another-migration-name
 B Finished migrations
 B Releasing advisory lock...
 B ... released advisory lock
-A ... aquired advisory lock
+A ... acquired advisory lock
 A Starting migrations
 A No migrations applied
 A Finished migrations
@@ -176,7 +195,7 @@ A migration file must match the following pattern:
 | id        | Any integer or left zero integers | Consecutive integer ID. <br />**Must start from 1 and be consecutive, e.g. if you have migrations 1-4, the next one must be 5.** |
 | separator | `_` or `-` or nothing             |                                                                                                                                  |
 | name      | Any length text                   |                                                                                                                                  |
-| extension | `.sql` or `.js`                   | File extensions supported **not case sensitive**                                                                                 |
+| extension | `.sql` or `.js`                   | File extensions supported. **Case insensitive.**                                                                                 |
 
 Example:
 
@@ -196,7 +215,7 @@ migrations
 └ 00003_alter-initial-tables-again.js
 ```
 
-Migrations will be performed in the order of the ids.
+Migrations will be performed in the order of the ids. If ids are not consecutive or if multiple migrations have the same id, the migration run will fail.
 
 Note that file names cannot be changed later.
 
@@ -250,4 +269,4 @@ pg.types.setTypeParser(DATATYPE_DATE, val => {
 
 ## Developing `postgres-migrations`
 
-The tests require Docker to be installed.
+The tests require Docker to be installed. It probably helps to `docker pull postgres:9.4`.

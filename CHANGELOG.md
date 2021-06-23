@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.0
+
+- Fetch latest upstream code, which includes a breaking change of going to `pg` version 8. See the [pg changelog](https://github.com/brianc/node-postgres/blob/master/CHANGELOG.md#pg800) for details.
+
 ## 4.1.4
 
 - Export Migration type
@@ -16,7 +20,7 @@
 
 - Allow non-consecutive migration ids
 
-## V4
+## 4.0.0
 
 - [BREAKING] Updated whole project to TypeScript
   - some types might differ, no functional change

@@ -1,6 +1,6 @@
 import * as pg from "pg"
 import SQL from "sql-template-strings"
-import {load} from "./files-loader"
+import {loadMigrationFiles} from "./files-loader"
 import {runMigration} from "./run-migration"
 import {
   BasicPgClient,
@@ -32,7 +32,7 @@ export async function migrate(
   if (typeof migrationsDirectory !== "string") {
     throw new Error("Must pass migrations directory as a string")
   }
-  const intendedMigrations = await load(migrationsDirectory, log)
+  const intendedMigrations = await loadMigrationFiles(migrationsDirectory, log)
 
   if ("client" in dbConfig) {
     // we have been given a client to use, it should already be connected
@@ -53,7 +53,7 @@ export async function migrate(
   }
 
   const client = new pg.Client(dbConfig)
-  client.on("error", err => {
+  client.on("error", (err) => {
     log(`pg client emitted an error: ${err.message}`)
   })
 
@@ -120,8 +120,9 @@ async function fetchAppliedMigrationFromDB(
 ) {
   let appliedMigrations = []
   if (await doesTableExist(client, migrationTableName)) {
-    log(`Migrations table with name '${migrationTableName}' exists,
-filtering not applied migrations.`)
+    log(
+      `Migrations table with name '${migrationTableName}' exists, filtering not applied migrations.`,
+    )
 
     const {rows} = await client.query(
       `SELECT * FROM ${migrationTableName} ORDER BY id`,

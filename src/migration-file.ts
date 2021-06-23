@@ -12,10 +12,7 @@ const getFileName = (filePath: string) => path.basename(filePath)
 const getFileContents = async (filePath: string) => readFile(filePath, "utf8")
 
 const hashString = (s: string) =>
-  crypto
-    .createHash("sha1")
-    .update(s, "utf8")
-    .digest("hex")
+  crypto.createHash("sha1").update(s, "utf8").digest("hex")
 
 const getSqlStringLiteral = (
   filePath: string,
@@ -34,7 +31,7 @@ const getSqlStringLiteral = (
   }
 }
 
-export const load = async (filePath: string) => {
+export const loadMigrationFile = async (filePath: string) => {
   const fileName = getFileName(filePath)
 
   try {
@@ -52,9 +49,6 @@ export const load = async (filePath: string) => {
       sql,
     }
   } catch (err) {
-    throw new Error(`${err.message}
-Offending file: '${fileName}'.`)
+    throw new Error(`${err.message} - Offending file: '${fileName}'.`)
   }
 }
-
-// module.exports._fileNameParser = fileNameParser
